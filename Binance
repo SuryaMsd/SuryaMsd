@@ -1,0 +1,116 @@
+package selenium;
+
+import java.util.concurrent.TimeUnit;
+import org.openqa.selenium.By;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+
+public class Binance {
+
+	public static void main(String[] args) {
+		
+		
+		String[] buypricechar = new String[25];
+		Float[] buyprice = new Float[25];
+		String[] buyername = new String[25];
+		String[] lowerlmtchar=new String[25];
+		String[] upperlmtchar=new String[25];
+	
+		
+		
+		System.setProperty("webdriver.chrome.driver", "C:\\WebDriver\\bin\\chromedriver.exe");
+		
+		ChromeDriver driver = new ChromeDriver();
+		
+		
+		driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		
+		driver.get("https://p2p.binance.com/en/trade/buy/BUSD");
+		
+		driver.manage().window().maximize();
+		
+		driver.findElement(By.id("C2Cfiatfilter_searhbox_fiat")).click();
+		
+		driver.findElementByClassName("css-jl5e70").sendKeys("INR");
+		
+		driver.findElement(By.id("INR")).click();
+		
+		//get 10 buy price
+		for(int i=1;i<=10;i++) {
+			String path ="//*[@id=\"__APP\"]/div[2]/main/div[5]/div/div[2]/div["+ i +"]/div[1]/div[2]/div/div/div[1]";
+			buypricechar[i-1] = driver.findElementByXPath(path).getText();
+		}
+		
+		//get 10 buyer names
+		for(int i=1;i<=10;i++) {
+			String namepath = "//*[@id=\"__APP\"]/div[2]/main/div[5]/div/div[2]/div[" + i + "]/div[1]/div[1]/div/div[1]";
+			buyername[i-1] = driver.findElementByXPath(namepath).getText();						
+		}
+				
+		//lower limit 10 buyer
+		for(int i=1;i<=10;i++) {
+			String limitpath="//*[@id=\"__APP\"]/div[2]/main/div[5]/div/div[2]/div["+i+"]/div[1]/div[3]/div/div[2]/div[2]/div[1]";
+			lowerlmtchar[i-1]= driver.findElementByXPath(limitpath).getText();
+		}
+		
+		//upper limit 10 buyer
+		for(int i=1;i<=10;i++) {
+			String upperpath="//*[@id=\"__APP\"]/div[2]/main/div[5]/div/div[2]/div["+i+"]/div[1]/div[3]/div/div[2]/div[2]/div[3]";
+			upperlmtchar[i-1]=driver.findElementByXPath(upperpath).getText();
+		}
+		
+		//goto page 2
+		driver.findElementByClassName("css-hlqxzb").click();
+		
+		
+        //get 11 to 20 buy price
+		for(int i=1;i<=10;i++) {
+        	String path2 ="//*[@id=\"__APP\"]/div[2]/main/div[5]/div/div[2]/div["+ i +"]/div[1]/div[2]/div/div/div[1]";
+        	buypricechar[i+9] = driver.findElementByXPath(path2).getText();
+        }
+        
+		//get 11 to 20 buyer names
+		for(int i=1;i<=10;i++) {
+			String namepath2 = "//*[@id=\"__APP\"]/div[2]/main/div[5]/div/div[2]/div[" + i + "]/div[1]/div[1]/div/div[1]";
+			buyername[i+9] = driver.findElementByXPath(namepath2).getText();							
+		}
+        
+		//lower limit 11 - 20 buyer
+		for(int i=1;i<=10;i++) {
+			String limitpath2="//*[@id=\"__APP\"]/div[2]/main/div[5]/div/div[2]/div["+i+"]/div[1]/div[3]/div/div[2]/div[2]/div[1]";
+			lowerlmtchar[i+9]= driver.findElementByXPath(limitpath2).getText();
+		}
+				
+		//upper limit 11 - 20 buyer
+		for(int i=1;i<=10;i++) {
+			String upperpath2="//*[@id=\"__APP\"]/div[2]/main/div[5]/div/div[2]/div["+i+"]/div[1]/div[3]/div/div[2]/div[2]/div[3]";
+			upperlmtchar[i+9]=driver.findElementByXPath(upperpath2).getText();
+		}
+		
+		//remove 2 char from name
+		for(int i=1;i<=20;i++) {
+			buyername[i-1]=buyername[i-1].substring(2);
+			lowerlmtchar[i-1]=lowerlmtchar[i-1].substring(2);
+			upperlmtchar[i-1]=upperlmtchar[i-1].substring(2);
+		}
+		
+	
+		
+		
+		//price string to float
+		for(int i=1;i<=20;i++) {
+			buyprice[i-1] = Float.parseFloat(buypricechar[i-1]);
+			
+		}
+		
+		
+		//print
+		for(int i=1;i<=20;i++) {
+			System.out.print(i+")"+buyername[i-1]+" = "+buypricechar[i-1]+"  Limit :"+lowerlmtchar[i-1]+" - "+upperlmtchar[i-1]);
+			System.out.println();
+        }
+		
+	}
+
+}
