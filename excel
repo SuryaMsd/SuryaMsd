@@ -1,0 +1,23 @@
+Sub MergeSheets()
+    Dim combinedSheet As Worksheet
+    Dim ws As Worksheet
+    Dim lastRow As Long, combinedLastRow As Long
+    
+    ' Create a new sheet to combine the data
+    Set combinedSheet = ThisWorkbook.Sheets.Add(After:= _
+                        ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
+    combinedSheet.Name = "CombinedData"
+    
+    combinedLastRow = 1 ' Start from the first row in the new sheet
+    
+    ' Loop through each sheet in the workbook
+    For Each ws In ThisWorkbook.Sheets
+        If ws.Name <> "CombinedData" Then ' Exclude the combined sheet
+            lastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).Row ' Assuming "Item Group" is in column A
+            
+            ' Copy data to the combined sheet
+            ws.Range("A1:B" & lastRow).Copy combinedSheet.Range("A" & combinedLastRow)
+            combinedLastRow = combinedSheet.Cells(combinedSheet.Rows.Count, "A").End(xlUp).Row + 1
+        End If
+    Next ws
+End Sub
